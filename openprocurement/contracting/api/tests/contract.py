@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import unittest
 
+from pyramid.interfaces import IRequest
 from uuid import uuid4
+from openprocurement.api.interfaces import IContentConfigurator
 from openprocurement.api.tests.base import snitch
 from openprocurement.contracting.api.tests.base import (
-    BaseWebTest,
-    Contract
+    BaseWebTest, Contract, ContractConfigurator
 )
 from openprocurement.contracting.api.tests.contract_blanks import (
     # ContractResourceTest
@@ -32,6 +33,8 @@ class ContractPostViewTest(BaseWebTest):
         }
 
         self.app.app.registry.contract_contractTypes = {'common': Contract}
+        self.app.app.registry.registerAdapter(ContractConfigurator, (Contract, IRequest),
+                                    IContentConfigurator)
 
     def test_post_view(self):
         self.app.authorization = ('Basic', ('contracting', ''))

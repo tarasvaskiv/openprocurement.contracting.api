@@ -11,6 +11,7 @@ from couchdb_schematics.document import SchematicsDocument
 from schematics.transforms import whitelist
 from schematics.types import StringType
 from schematics.types.compound import ModelType
+from zope.interface import implementer, Interface
 from openprocurement.api.models import (
     Contract as BaseContract,
     Document as BaseDocument,
@@ -20,6 +21,7 @@ from openprocurement.api.models import (
     IsoDateTimeType,
     schematics_default_role
 )
+from openprocurement.api.adapters import ContentConfigurator as BaseConfigurator
 from openprocurement.api.constants import VERSION, SESSION
 
 
@@ -96,6 +98,19 @@ class Document(BaseDocument):
                             default='contract')
 
 
+class IContract(Interface):
+    """ Contract marker interface """
+
+
+class ContractConfigurator(BaseConfigurator):
+    """ Contract configuration adapter """
+
+    name = "Test Configurator"
+    model = None
+
+    create_accreditation = 3
+
+@implementer(IContract)
 class Contract(SchematicsDocument, BaseContract):
     contractType = StringType(default='common')
     mode = StringType(choices=['test'])

@@ -18,7 +18,7 @@ from openprocurement.contracting.api.design import (
     contracts_real_by_local_seq_view,
     contracts_test_by_local_seq_view,
 )
-from openprocurement.contracting.api.validation import validate_contract_data
+from openprocurement.contracting.api.validation import validate_contract_data, validate_accreditation
 
 VIEW_MAP = {
     u'': contracts_real_by_dateModified_view,
@@ -56,7 +56,7 @@ class ContractsResource(APIResourceListing):
         self.log_message_id = 'contract_list_custom'
 
     @json_view(content_type="application/json", permission='create_contract',
-               validators=(validate_contract_data,))
+               validators=(validate_contract_data, validate_accreditation))
     def post(self):
         contract = self.request.validated['contract']
         for i in self.request.validated['json_data'].get('documents', []):
